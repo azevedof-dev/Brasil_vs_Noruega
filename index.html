@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brasil x Noruega — Oitavas de Final | Copa do Mundo FIFA 2026</title>
+<style>
+  :root{
+    --bg: #0b0f14;
+    --bg-alt: #121821;
+    --card: #161d27;
+    --line: #232c38;
+    --text: #e8edf3;
+    --muted: #8a97a8;
+    --br-green: #009739;
+    --br-yellow: #ffcc29;
+    --no-red: #ef2b2d;
+    --no-blue: #00205b;
+    --gold: #f2b705;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at 50% 0%, var(--bg-alt), var(--bg) 60%);
+    color: var(--text);
+    padding-bottom: 40px;
+  }
+  a{color: var(--gold);}
+  .wrap{max-width: 1000px; margin: 0 auto; padding: 0 16px;}
+
+  /* Top breadcrumb */
+  .topbar{
+    background: linear-gradient(90deg, var(--br-green), var(--gold) 50%, var(--no-red));
+    height: 5px;
+  }
+  .breadcrumb{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 14px 0; font-size: 13px; color: var(--muted); flex-wrap: wrap; gap:6px;
+  }
+  .breadcrumb b{color:var(--text);}
+  .badge{
+    display:inline-block; padding:3px 10px; border-radius: 20px;
+    background: var(--card); border:1px solid var(--line); font-size:12px;
+  }
+
+  /* Scoreboard */
+  .scoreboard{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 20px;
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:center;
+    gap: 12px;
+  }
+  .team{ text-align:center; }
+  .crest{
+    width: 74px; height:74px; border-radius:50%;
+    margin: 0 auto 10px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:22px; color:#fff;
+    box-shadow: 0 0 0 4px var(--bg) inset, 0 4px 14px rgba(0,0,0,.4);
+  }
+  .crest.br{ background: conic-gradient(from 180deg, var(--br-green), var(--br-yellow), var(--br-green)); color:#0b3d0b;}
+  .crest.no{ background: linear-gradient(160deg, var(--no-blue), var(--no-red)); }
+  .team-name{ font-size: 18px; font-weight:700; }
+  .team-sub{ font-size:12px; color:var(--muted); margin-top:2px;}
+
+  .center-score{ text-align:center; }
+  .score-edit{ display:flex; align-items:center; justify-content:center; gap:8px; }
+  .score-input{
+    width: 60px; font-size: 48px; font-weight:800; letter-spacing: 1px;
+    text-align:center; background:transparent; color:var(--text);
+    font-family: inherit; border:none; border-bottom:2px dashed transparent;
+  }
+  .score-input:hover, .score-input:focus{ border-bottom-color: var(--gold); outline:none; }
+  .score-input::-webkit-inner-spin-button, .score-input::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+  .score-input{ -moz-appearance:textfield; }
+  .score-dash{ font-size: 40px; color: var(--muted); font-weight:800; }
+  .status-wrap{ position:relative; display:inline-block; margin-top:8px; }
+  .status-select{
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    display:inline-block; padding:4px 26px 4px 14px; border-radius:20px;
+    font-size:12px; font-weight:600; letter-spacing:.5px; text-transform:uppercase;
+    background: rgba(242,183,5,.12); color: var(--gold); border:1px solid rgba(242,183,5,.4);
+    cursor:pointer; font-family: inherit;
+  }
+  .status-select.live{ background: rgba(239,43,45,.15); color:#ff6b6d; border-color: rgba(239,43,45,.5); animation: pulse 1.6s infinite; }
+  .status-wrap::after{ content:"▾"; position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:9px; color:inherit; pointer-events:none; }
+  @keyframes pulse{ 0%{opacity:1;} 50%{opacity:.55;} 100%{opacity:1;} }
+  .countdown{ font-size:11px; color:var(--muted); margin-top:8px; }
+  .disclaimer{
+    font-size: 11px; color: var(--muted); text-align:center; margin-top:14px;
+    border-top: 1px dashed var(--line); padding-top:10px;
+  }
+  .reset-link{
+    background:none; border:none; color:var(--muted); text-decoration:underline;
+    font-size:11px; cursor:pointer; padding:0; margin-top:8px; font-family:inherit;
+  }
+  .reset-link:hover{ color: var(--gold); }
+
+  /* Info strip */
+  .info-strip{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:12px; margin-top:16px;
+  }
+  .info-card{
+    background: var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px;
+  }
+  .info-card h4{ margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted);}
+  .info-card p{ margin:0; font-size:14px; line-height:1.5;}
+
+  /* Section headers */
+  .section{ margin-top: 34px; }
+  .section h2{
+    font-size: 15px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .section h2::after{ content:""; flex:1; height:1px; background: var(--line); }
+
+  /* Lineups */
+  .lineups{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  @media (max-width: 700px){ .lineups{ grid-template-columns: 1fr; } .scoreboard{grid-template-columns: 1fr; text-align:center;} }
+  .lineup-card{ background: var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .lineup-card.br{ border-top: 3px solid var(--br-green); }
+  .lineup-card.no{ border-top: 3px solid var(--no-red); }
+  .lineup-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
+  .lineup-head h3{ margin:0; font-size:16px;}
+  .lineup-head span{ font-size:12px; color:var(--muted);}
+  .coach{ font-size:12px; color:var(--muted); margin-bottom:14px; }
+  .players{ display:flex; flex-direction:column; gap:10px; }
+  .player{ display:flex; align-items:center; gap:12px; }
+  .avatar{ position:relative; width:44px; height:44px; flex:none; border-radius:50%; }
+  .avatar img{
+    width:100%; height:100%; border-radius:50%; object-fit:cover; display:block;
+    border: 2px solid rgba(255,255,255,.15); background: var(--bg-alt);
+  }
+  .avatar .num{
+    position:absolute; bottom:-3px; right:-3px; width:18px; height:18px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:800; color:#fff; border: 1.5px solid var(--card);
+  }
+  .lineup-card.br .num{ background: var(--br-green); }
+  .lineup-card.no .num{ background: var(--no-red); }
+  /* fallback when the photo fails to load: fill the circle with the team color */
+  .avatar.photo-fallback img{ visibility:hidden; }
+  .lineup-card.br .avatar.photo-fallback{ background: var(--br-green); }
+  .lineup-card.no .avatar.photo-fallback{ background: var(--no-red); }
+  .player-name{ font-size:14px; }
+  .player-pos{ font-size:11px; color:var(--muted); }
+
+  /* Campaign cards */
+  .campaign-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  @media (max-width: 700px){ .campaign-grid{ grid-template-columns: 1fr; } }
+  .campaign-card{ background: var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .campaign-card h3{ margin:0 0 4px; font-size:16px; }
+  .campaign-card .stats-line{ font-size:12px; color: var(--muted); margin-bottom:14px; }
+  .match-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 0; border-top:1px solid var(--line); font-size:13px;
+  }
+  .match-row:first-of-type{ border-top:none; }
+  .match-row .res{ font-weight:700; }
+  .match-row .detail{ color:var(--muted); font-size:12px; }
+  .top-scorer{
+    margin-top:14px; padding:10px 12px; background: rgba(242,183,5,.08);
+    border:1px solid rgba(242,183,5,.3); border-radius:10px; font-size:13px;
+  }
+
+  /* H2H */
+  .h2h-card{ background: var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .h2h-card p{ font-size:14px; line-height:1.6; margin: 0 0 8px; }
+
+  footer{ margin-top: 40px; font-size:11px; color: var(--muted); text-align:center; line-height:1.8; }
+  footer a{ color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+<div class="wrap">
+
+  <div class="breadcrumb">
+    <div>Copa do Mundo FIFA 2026™ &rsaquo; Oitavas de Final</div>
+    <div class="badge">Domingo, 5 de julho de 2026</div>
+  </div>
+
+  <!-- SCOREBOARD -->
+  <div class="scoreboard">
+    <div class="team">
+      <div class="crest br">BR</div>
+      <div class="team-name">Brasil</div>
+      <div class="team-sub">1º lugar · Grupo C</div>
+    </div>
+
+    <div class="center-score">
+      <div class="score-edit">
+        <input type="number" id="scoreBR" class="score-input" min="0" max="99" value="0" aria-label="Gols do Brasil">
+        <span class="score-dash">–</span>
+        <input type="number" id="scoreNO" class="score-input" min="0" max="99" value="0" aria-label="Gols da Noruega">
+      </div>
+      <div class="status-wrap">
+        <select id="statusSelect" class="status-select" aria-label="Status da partida">
+          <option value="pre">Pré-jogo</option>
+          <option value="1t">1º Tempo</option>
+          <option value="intervalo">Intervalo</option>
+          <option value="2t">2º Tempo</option>
+          <option value="prorrogacao">Prorrogação</option>
+          <option value="penaltis">Pênaltis</option>
+          <option value="encerrado">Encerrado</option>
+        </select>
+      </div>
+      <div class="countdown" id="countdown">calculando…</div>
+    </div>
+
+    <div class="team">
+      <div class="crest no">NO</div>
+      <div class="team-name">Noruega</div>
+      <div class="team-sub">2º lugar · Grupo I</div>
+    </div>
+  </div>
+  <div class="disclaimer">
+    Placar e status atualizados manualmente por você — edite os números e o menu acima conforme acompanha o jogo pela
+    TV Globo, SBT, SporTV, ge TV ou CazéTV (Disney+).
+    <br><button type="button" class="reset-link" id="resetScore">Reiniciar placar</button>
+  </div>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-card">
+      <h4>Local</h4>
+      <p>MetLife Stadium, East Rutherford (Nova Jersey/EUA) — 17h (horário de Brasília)</p>
+    </div>
+    <div class="info-card">
+      <h4>Técnicos</h4>
+      <p>Brasil: Carlo Ancelotti<br>Noruega: Ståle Solbakken</p>
+    </div>
+    <div class="info-card">
+      <h4>Arbitragem</h4>
+      <p>Árbitro: Ismail Elfath (EUA)<br>VAR: Tatiana Guzmán (NCA)</p>
+    </div>
+    <div class="info-card">
+      <h4>Transmissão</h4>
+      <p>TV Globo, SBT, SporTV, NSports, ge TV, CazéTV (Disney+) e Tempo Real CNN Esportes</p>
+    </div>
+  </div>
+
+  <!-- LINEUPS -->
+  <div class="section">
+    <h2>Escalações prováveis</h2>
+    <div class="lineups">
+      <div class="lineup-card br">
+        <div class="lineup-head"><h3>Brasil</h3><span>4-3-3</span></div>
+        <div class="coach">Técnico: Carlo Ancelotti</div>
+        <div class="players">
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Alisson_Becker_Brazil_V_Morocco_13_June_2026-117_%28cropped%29.jpg/330px-Alisson_Becker_Brazil_V_Morocco_13_June_2026-117_%28cropped%29.jpg" alt="Alisson" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">1</div></div><div><div class="player-name">Alisson</div><div class="player-pos">Goleiro</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Danilo_and_Bilal_El_Khannouss_at_2026_FIFA_World_Cup_by_YantsImages_%28cropped%29.jpg/330px-Danilo_and_Bilal_El_Khannouss_at_2026_FIFA_World_Cup_by_YantsImages_%28cropped%29.jpg" alt="Danilo" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">2</div></div><div><div class="player-name">Danilo</div><div class="player-pos">Lateral-direito</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Marquinhos_Brazil_V_Morocco_13_June_2026-153_%28cropped%29.jpg/330px-Marquinhos_Brazil_V_Morocco_13_June_2026-153_%28cropped%29.jpg" alt="Marquinhos" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">3</div></div><div><div class="player-name">Marquinhos</div><div class="player-pos">Zagueiro</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Gabriel_Magalhaes_Brazil_V_Morocco_13_June_2026-132_%28cropped%29.jpg/330px-Gabriel_Magalhaes_Brazil_V_Morocco_13_June_2026-132_%28cropped%29.jpg" alt="Gabriel Magalhães" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">4</div></div><div><div class="player-name">Gabriel Magalhães</div><div class="player-pos">Zagueiro</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Douglas_Santos_Brazil_V_Morocco_13_June_2026-87_%28cropped%29.jpg/330px-Douglas_Santos_Brazil_V_Morocco_13_June_2026-87_%28cropped%29.jpg" alt="Douglas Santos" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">6</div></div><div><div class="player-name">Douglas Santos</div><div class="player-pos">Lateral-esquerdo</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Casemiro_Brazil_V_Morocco_13_June_2026-76_%28cropped%29.jpg/330px-Casemiro_Brazil_V_Morocco_13_June_2026-76_%28cropped%29.jpg" alt="Casemiro" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">5</div></div><div><div class="player-name">Casemiro</div><div class="player-pos">Volante</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Bruno_Guimaraes_Brazil_V_Morocco_13_June_2026-78_%28cropped%29.jpg/330px-Bruno_Guimaraes_Brazil_V_Morocco_13_June_2026-78_%28cropped%29.jpg" alt="Bruno Guimarães" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">8</div></div><div><div class="player-name">Bruno Guimarães</div><div class="player-pos">Meio-campo</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Andreas-Pereira-Palmeiras-Internacional-sep2025_%28cropped%29.jpg/330px-Andreas-Pereira-Palmeiras-Internacional-sep2025_%28cropped%29.jpg" alt="Andreas Pereira" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">11</div></div><div><div class="player-name">Andreas Pereira / Martinelli</div><div class="player-pos">Meio-campo (dúvida)</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Rayan_Brazil_V_Morocco_13_June_2026-142.jpg/330px-Rayan_Brazil_V_Morocco_13_June_2026-142.jpg" alt="Rayan" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">19</div></div><div><div class="player-name">Rayan</div><div class="player-pos">Ponta-direita</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Matheus_Cunha_Brazil_V_Morocco_13_June_2026-178_%28cropped%29.jpg/330px-Matheus_Cunha_Brazil_V_Morocco_13_June_2026-178_%28cropped%29.jpg" alt="Matheus Cunha" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">9</div></div><div><div class="player-name">Matheus Cunha</div><div class="player-pos">Atacante</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Vin%C3%ADcius_J%C3%BAnior_Brazil_V_Morocco_13_June_2026-207_%28cropped%29.jpg/330px-Vin%C3%ADcius_J%C3%BAnior_Brazil_V_Morocco_13_June_2026-207_%28cropped%29.jpg" alt="Vini Jr." loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">7</div></div><div><div class="player-name">Vini Jr.</div><div class="player-pos">Ponta-esquerda</div></div></div>
+        </div>
+      </div>
+
+      <div class="lineup-card no">
+        <div class="lineup-head"><h3>Noruega</h3><span>4-3-3</span></div>
+        <div class="coach">Técnico: Ståle Solbakken</div>
+        <div class="players">
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Norway_Italy_-_June_2025_A_10_%28cropped%29.jpg/330px-Norway_Italy_-_June_2025_A_10_%28cropped%29.jpg" alt="Ørjan Nyland" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">1</div></div><div><div class="player-name">Ørjan Nyland</div><div class="player-pos">Goleiro</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Julian_Ryerson_Morocco_v_Norway_7_June_2026-200_%28cropped%29.jpg/330px-Julian_Ryerson_Morocco_v_Norway_7_June_2026-200_%28cropped%29.jpg" alt="Julian Ryerson" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">2</div></div><div><div class="player-name">Julian Ryerson</div><div class="player-pos">Lateral-direito</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Kristoffer_Ajer_Morocco_v_Norway_7_June_2026-7.jpg/330px-Kristoffer_Ajer_Morocco_v_Norway_7_June_2026-7.jpg" alt="Kristoffer Ajer" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">4</div></div><div><div class="player-name">Kristoffer Ajer</div><div class="player-pos">Zagueiro</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Leo_Ostigard_Morocco_v_Norway_7_June_2026-20.jpg/330px-Leo_Ostigard_Morocco_v_Norway_7_June_2026-20.jpg" alt="Leo Østigård" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">5</div></div><div><div class="player-name">Leo Østigård</div><div class="player-pos">Zagueiro</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Fredrik_Andr%C3%A9_Bj%C3%B8rkan_Morocco_v_Norway_7_June_2026-40_%28cropped%29.jpg/330px-Fredrik_Andr%C3%A9_Bj%C3%B8rkan_Morocco_v_Norway_7_June_2026-40_%28cropped%29.jpg" alt="Fredrik Bjørkan" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">3</div></div><div><div class="player-name">Fredrik Bjørkan</div><div class="player-pos">Lateral-esquerdo</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Norway_Italy_-_June_2025_A_14_%28cropped%29.jpg/330px-Norway_Italy_-_June_2025_A_14_%28cropped%29.jpg" alt="Patrick Berg" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">6</div></div><div><div class="player-name">Patrick Berg</div><div class="player-pos">Volante</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Martin_Odegaard_Morocco_v_Norway_7_June_2026-56_%28cropped%29.jpg/330px-Martin_Odegaard_Morocco_v_Norway_7_June_2026-56_%28cropped%29.jpg" alt="Martin Ødegaard" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">10</div></div><div><div class="player-name">Martin Ødegaard</div><div class="player-pos">Meio-campo (capitão)</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Norway_Italy_-_June_2025_E_25_%28cropped%29.jpg/330px-Norway_Italy_-_June_2025_E_25_%28cropped%29.jpg" alt="Sander Berge" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">8</div></div><div><div class="player-name">Sander Berge</div><div class="player-pos">Meio-campo</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Antonio_Nusa_Morocco_v_Norway_7_June_2026-110_%28cropped%29.jpg/330px-Antonio_Nusa_Morocco_v_Norway_7_June_2026-110_%28cropped%29.jpg" alt="Antonio Nusa" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">17</div></div><div><div class="player-name">Antonio Nusa</div><div class="player-pos">Ponta</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Erling_Haaland_Morocco_v_Norway_7_June_2026-51.jpg/330px-Erling_Haaland_Morocco_v_Norway_7_June_2026-51.jpg" alt="Erling Haaland" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">9</div></div><div><div class="player-name">Erling Haaland</div><div class="player-pos">Atacante</div></div></div>
+          <div class="player"><div class="avatar"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Alexander_Sorloth_Morocco_v_Norway_7_June_2026-58_%28cropped%29.jpg/330px-Alexander_Sorloth_Morocco_v_Norway_7_June_2026-58_%28cropped%29.jpg" alt="Alexander Sørloth" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('photo-fallback')"><div class="num">23</div></div><div><div class="player-name">Alexander Sørloth</div><div class="player-pos">Atacante</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGN -->
+  <div class="section">
+    <h2>Campanha na Copa até aqui</h2>
+    <div class="campaign-grid">
+      <div class="campaign-card">
+        <h3>Brasil — Grupo C (1º lugar)</h3>
+        <div class="stats-line">7 pontos · 7 gols marcados · 1 sofrido</div>
+
+        <div class="match-row"><span>Brasil 1 x 1 Marrocos</span><span class="detail">Fase de grupos</span></div>
+        <div class="match-row"><span>Brasil 3 x 0 Haiti</span><span class="detail">Matheus Cunha (2), Vini Jr.</span></div>
+        <div class="match-row"><span>Escócia 0 x 3 Brasil</span><span class="detail">Vini Jr. (2), Matheus Cunha</span></div>
+        <div class="match-row"><span>Brasil 2 x 1 Japão</span><span class="detail">Oitavas de acesso · gol nos acréscimos</span></div>
+
+        <div class="top-scorer">Artilheiro da seleção: <b>Vinicius Jr.</b> — 4 gols na competição.</div>
+      </div>
+
+      <div class="campaign-card">
+        <h3>Noruega — Grupo I (2º lugar)</h3>
+        <div class="stats-line">6 pontos · classificada após 28 anos sem disputar uma Copa</div>
+
+        <div class="match-row"><span>Noruega 4 x 1 Iraque</span><span class="detail">Haaland (2)</span></div>
+        <div class="match-row"><span>Noruega 3 x 2 Senegal</span><span class="detail">Haaland (2)</span></div>
+        <div class="match-row"><span>Noruega 2 x 4 França</span><span class="detail">Derrota na 3ª rodada</span></div>
+        <div class="match-row"><span>Noruega 2 x 1 Costa do Marfim</span><span class="detail">Nusa e Haaland, gol decisivo nos minutos finais</span></div>
+
+        <div class="top-scorer">Artilheiro da seleção: <b>Erling Haaland</b> — 5 gols em 3 jogos, um dos artilheiros da Copa.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEAD TO HEAD -->
+  <div class="section">
+    <h2>Confrontos diretos em Copas do Mundo</h2>
+    <div class="h2h-card">
+      <p>Brasil e Noruega se enfrentaram apenas uma vez em Copas do Mundo: em <b>1998</b>, na fase de grupos da França, a Noruega venceu por <b>2 a 1</b>, resultado que eliminaria o Brasil naquela chave posteriormente na competição.</p>
+      <p>O Brasil <b>nunca venceu a Noruega</b> em Copas do Mundo e também não bate uma seleção europeia em mata-mata de Mundial desde 2022 — um tabu que Ancelotti tenta quebrar hoje.</p>
+    </div>
+  </div>
+
+  <footer>
+    Página informativa não-oficial sobre Brasil x Noruega — Copa do Mundo FIFA 2026. Dados de escalações, campanha e histórico
+    compilados a partir de reportagens da ESPN, CNN Brasil, Lance!, FIFA.com e Alô Alô Bahia em 05/07/2026.
+    Escalações são probabilidades pré-jogo e podem mudar até a súmula oficial.<br>
+    Fotos dos jogadores: Wikimedia Commons (licenças livres), créditos dos respectivos fotógrafos/uploaders.<br>
+    Marcas e nomes das seleções pertencem à FIFA e às respectivas federações.
+  </footer>
+
+</div>
+
+<script>
+  // Kickoff: 2026-07-05 17:00 America/Sao_Paulo (UTC-3)
+  var kickoff = new Date("2026-07-05T17:00:00-03:00").getTime();
+  var STORAGE_KEY = "brno2026_matchstate";
+  var LIVE_STATUSES = ["1t", "2t", "prorrogacao", "penaltis"];
+
+  var scoreBR = document.getElementById("scoreBR");
+  var scoreNO = document.getElementById("scoreNO");
+  var statusSelect = document.getElementById("statusSelect");
+  var countdown = document.getElementById("countdown");
+  var resetBtn = document.getElementById("resetScore");
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+
+  function saveState(){
+    var state = { br: scoreBR.value, no: scoreNO.value, status: statusSelect.value, updatedAt: Date.now() };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return state;
+  }
+
+  function applyState(state){
+    scoreBR.value = state.br;
+    scoreNO.value = state.no;
+    statusSelect.value = state.status;
+  }
+
+  function refreshLiveStyle(){
+    statusSelect.classList.toggle("live", LIVE_STATUSES.indexOf(statusSelect.value) !== -1);
+  }
+
+  function renderFooterInfo(){
+    var now = Date.now();
+    if (statusSelect.value === "pre" && now < kickoff){
+      var diff = kickoff - now;
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      countdown.textContent = "Bola rola em " + h + "h " + m + "min " + s + "s";
+      return;
+    }
+    var state = loadState();
+    if (state && state.updatedAt){
+      countdown.textContent = "Atualizado manualmente às " + new Date(state.updatedAt).toLocaleTimeString("pt-BR");
+    } else {
+      countdown.textContent = "";
+    }
+  }
+
+  function onEdit(){
+    saveState();
+    refreshLiveStyle();
+    renderFooterInfo();
+  }
+
+  scoreBR.addEventListener("input", onEdit);
+  scoreNO.addEventListener("input", onEdit);
+  statusSelect.addEventListener("change", onEdit);
+
+  resetBtn.addEventListener("click", function(){
+    localStorage.removeItem(STORAGE_KEY);
+    scoreBR.value = 0;
+    scoreNO.value = 0;
+    statusSelect.value = "pre";
+    refreshLiveStyle();
+    renderFooterInfo();
+  });
+
+  var saved = loadState();
+  if (saved) applyState(saved);
+  refreshLiveStyle();
+  renderFooterInfo();
+  setInterval(renderFooterInfo, 1000);
+</script>
+
+</body>
+</html>
